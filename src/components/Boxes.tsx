@@ -1,5 +1,5 @@
 
-const Boxes = ({numberOfUnitsPerRow, numberOfUnitsCompleted, numberOfBoxes})=>{
+const Boxes = ({numberOfUnitsPerRow, numberOfUnitsCompleted, numberOfBoxes}: {numberOfUnitsPerRow: number, numberOfUnitsCompleted: number, numberOfBoxes:  number})=>{
   const boxes = new Array(numberOfBoxes).fill(null);
 
   const className= numberOfUnitsPerRow===10? 'grid grid-cols-10 gap-3': numberOfUnitsPerRow===36? 'grid grid-cols-36 gap-3' : 'grid grid-cols-52 gap-3'
