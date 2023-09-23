@@ -51,6 +51,13 @@ You can customize the Life Visualizer to match your specific circumstances:
 
 - _Personal Goals_: Set personal goals and milestones in the configuration to track your progress.
 
+## Potential features
+
+- Ability to add life events
+- Highlight the weeks in the past in different colors to segment them into "life chapters"
+- Mark a goal on the future boxes
+- Write something in each box as a note
+- Quick Peek box on hovering over a box showing the events, notes etc
 ## Contributing
 
 Contributions are welcome! If you have ideas for improvements or new features, please open an issue or submit a pull request.
