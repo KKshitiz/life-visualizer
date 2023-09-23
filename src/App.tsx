@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import Boxes from "./components/Boxes";
 import LifeUnit from "./types/lifeUnit";
 
 function App() {
@@ -14,7 +15,6 @@ function App() {
       ? maxAge * 12
       : maxAge * 52;
   const numberOfUnitsPerRow = lifeUnit === 'year' ? 10 : lifeUnit==='month' ? 36 : 52
-  const boxes = new Array(numberOfBoxes).fill(null);
   const diffTime = Math.abs(Date.now() - dob.valueOf())
   const diffDays = Math.ceil(diffTime/(1000 * 60 *60 *24))
 
@@ -74,14 +74,7 @@ function App() {
           />
         </div>
       </div>
-      <div className={`grid grid-cols-${numberOfUnitsPerRow} gap-3`}>
-        {boxes.map((_, index) => (
-          <div
-            className={`w-0.5 aspect-square p-1 rounded-sm hover:cursor-pointer hover:bg-blue-500 ${index< numberOfUnitsCompleted? 'bg-blue-500': 'bg-white'}`}
-            key={index}
-          ></div>
-        ))}
-      </div>
+     <Boxes numberOfUnitsPerRow={numberOfUnitsPerRow} numberOfUnitsCompleted={numberOfUnitsCompleted} numberOfBoxes={numberOfBoxes}/>
     </>
   );
 }
