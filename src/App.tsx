@@ -1,13 +1,15 @@
 import { useState } from "react";
 import "./App.css";
 import Boxes from "./components/Boxes";
+import Footer from "./components/Footer";
+import Input from "./components/Input";
 import LifeUnit from "./types/lifeUnit";
 
 function App() {
   const [maxAge, setMaxAge] = useState<number>(90);
   const [dob, setDob] = useState<Date>(new Date());
   const [lifeUnit, setLifeUnit] = useState<LifeUnit>("year");
-  const [showFamousDeaths, setShowFamousDeaths] = useState<boolean>(false)
+  const [showFamousDeaths, setShowFamousDeaths] = useState<boolean>(false);
 
   const numberOfBoxes =
     lifeUnit === "year"
@@ -29,43 +31,40 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow items-center">
         <h1>Life visualizer</h1>
         <div className="py-5">
-          <div>
-            Your life in
-            <select
-              name="timeframe"
-              id=""
-              value={lifeUnit}
-              onChange={(e) => {
-                setLifeUnit(e.target.value as LifeUnit);
-              }}
-            >
-              <option value="year">Year</option>
-              <option value="month">Month</option>
-              <option value="week">Week</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="maxAge">Enter max age</label>
-            <input
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div>
+              Your life in
+              <select
+                name="timeframe"
+                id=""
+                value={lifeUnit}
+                onChange={(e) => {
+                  setLifeUnit(e.target.value as LifeUnit);
+                }}
+              >
+                <option value="year">Year</option>
+                <option value="month">Month</option>
+                <option value="week">Week</option>
+              </select>
+            </div>
+            <Input
+              label="Life expectancy"
               type="number"
               name="maxAge"
-              id="maxAge"
               value={maxAge}
               min={60}
+              max={100}
               onChange={(event) => {
                 const inputMaxAge = event.target.valueAsNumber;
                 setMaxAge(inputMaxAge);
                 console.log(inputMaxAge);
               }}
             />
-          </div>
-
-          <div>
-            <label htmlFor="dob">Enter date of birth</label>
-            <input
+            <Input
+              label="Enter date of birth"
               type="date"
               name="dob"
               id="dob"
@@ -76,19 +75,25 @@ function App() {
                 }
               }}
             />
-          </div>
-          <div>
-              <label htmlFor="famousDeaths">Famous deaths</label>
-          <input type="checkbox" name="famousDeaths" id="famousDeaths" checked={showFamousDeaths} onChange={()=>setShowFamousDeaths(current=>!current)}/>
-          </div>
+            <Input
+              label="Famous deaths"
+              type="checkbox"
+              name="famousDeaths"
+              id="famousDeaths"
+              checked={showFamousDeaths}
+              onChange={() => setShowFamousDeaths((current) => !current)}
+            />
+          </form>
         </div>
         <Boxes
           numberOfUnitsPerRow={numberOfUnitsPerRow}
           numberOfUnitsCompleted={numberOfUnitsCompleted}
           numberOfBoxes={numberOfBoxes}
-          unit={lifeUnit} showFamousDeaths={showFamousDeaths}        />
+          unit={lifeUnit}
+          showFamousDeaths={showFamousDeaths}
+        />
       </div>
-      <div className="p-0">Made with ❤️ by Kshitiz Kamal</div>
+      <Footer />
     </>
   );
 }

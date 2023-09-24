@@ -1,6 +1,6 @@
 // Cannot use a map of <Date, string> as can have multiple events on a single date
 
-import LifeEvent from "../types/lifeEvent";
+import LifeEvent from "../../types/lifeEvent";
 
 // Date should be in the format: yyyy-mm-dd
 
