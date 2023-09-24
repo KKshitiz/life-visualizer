@@ -74,7 +74,7 @@ function App() {
           />
         </div>
       </div>
-     <Boxes numberOfUnitsPerRow={numberOfUnitsPerRow} numberOfUnitsCompleted={numberOfUnitsCompleted} numberOfBoxes={numberOfBoxes}/>
+     <Boxes numberOfUnitsPerRow={numberOfUnitsPerRow} numberOfUnitsCompleted={numberOfUnitsCompleted} numberOfBoxes={numberOfBoxes} unit={lifeUnit}/>
     </>
   );
 }
