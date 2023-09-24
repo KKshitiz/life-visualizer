@@ -3,10 +3,11 @@ import Boxes from "../components/Boxes";
 import Footer from "../components/Footer";
 import Input from "../components/Input";
 import LifeUnit from "../types/lifeUnit";
+import LocalStorageService from "../utils/localStorageService";
 
 const HomePage = () => {
-   const [maxAge, setMaxAge] = useState<number>(90);
-  const [dob, setDob] = useState<Date>(new Date());
+  const [maxAge, setMaxAge] = useState<number>(90);
+  const [dob, setDob] = useState<Date>(LocalStorageService.getDateOfBirth() ?? new Date());
   const [lifeUnit, setLifeUnit] = useState<LifeUnit>("year");
   const [showFamousDeaths, setShowFamousDeaths] = useState<boolean>(false);
 
@@ -18,15 +19,15 @@ const HomePage = () => {
       : maxAge * 52;
   const numberOfUnitsPerRow =
     lifeUnit === "year" ? 10 : lifeUnit === "month" ? 36 : 52;
-  const diffTime = Math.abs(Date.now() - dob.valueOf());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const elapsedTimeInMs = Math.abs(Date.now() - dob.valueOf());
+  const elapsedDays = Math.ceil(elapsedTimeInMs / (1000 * 60 * 60 * 24));
 
   const numberOfUnitsCompleted =
     lifeUnit === "year"
-      ? diffDays / 365
+      ? elapsedDays / 365
       : lifeUnit === "month"
-      ? diffDays / 31
-      : diffDays / 7;
+      ? elapsedDays / 31
+      : elapsedDays / 7;
 
   return (
     <>
@@ -67,10 +68,14 @@ const HomePage = () => {
               type="date"
               name="dob"
               id="dob"
+              value={dob.toISOString().split('T')[0]}
               onChange={(event) => {
+                console.log(event.target.value);
+
                 const inputDob = event.target.valueAsDate;
                 if (inputDob !== null) {
                   setDob(inputDob);
+                  LocalStorageService.saveDateOfBirth(inputDob);
                 }
               }}
             />
