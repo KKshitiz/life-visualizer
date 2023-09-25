@@ -1,52 +1,27 @@
 import { useState } from "react";
-import Events from "../constants/events";
-import LifeEvent from "../types/lifeEvent";
-import LifeUnit from "../types/lifeUnit";
-import { convertLifeEventToUnit } from "../utils/dateToLifeConverter";
+import useAppDispatch from "../redux/hooks/useAppDispatch";
+import useAppSelector from "../redux/hooks/useAppSelector";
+import { homeActions, homeState } from "../redux/reducers/homeSlice";
 import Box from "./Box";
 
-type BoxesProps = {
-  numberOfUnitsPerRow: number;
-  numberOfUnitsCompleted: number;
-  numberOfBoxes: number;
-  unit: LifeUnit;
-  showFamousDeaths: boolean;
-};
+const Boxes = () => {
+  const dispatch = useAppDispatch();
+  const {
+    boxes: {
+      details,
+      perRow,
+      selection: { startIndex, endIndex },
+    },
+  } = useAppSelector(homeState);
 
-const Boxes = ({
-  numberOfUnitsPerRow,
-  numberOfUnitsCompleted,
-  numberOfBoxes,
-  unit,
-  showFamousDeaths,
-}: BoxesProps) => {
-  const [selectedBoxIndexes, setSelectedBoxIndexes] = useState<{
-    start: number, end: number
-  }>({start: 0, end: 0});
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
 
-  const boxes = new Array(numberOfBoxes).fill(null);
-
   const className =
-    numberOfUnitsPerRow === 10
+    perRow === 10
       ? "grid grid-cols-10 gap-1"
-      : numberOfUnitsPerRow === 36
+      : perRow === 36
       ? "grid grid-cols-36 gap-1"
       : "grid grid-cols-52 gap-1";
-
-  const serialNumberEvents = new Map<number, LifeEvent[]>();
-
-  if (showFamousDeaths) {
-    addEventsToVisualizer(serialNumberEvents, Events.famousDeaths, unit);
-    console.log('add famous deaths')
-  }
-  addEventsToVisualizer(
-    serialNumberEvents,
-    Events.scientificBreakthroughs,
-    unit
-  );
-
-  console.log(serialNumberEvents);
 
   const handleMouseDown = (
     e: React.MouseEvent<HTMLDivElement>,
@@ -54,14 +29,20 @@ const Boxes = ({
   ) => {
     e.preventDefault();
     setIsMouseDown(true);
-    setSelectedBoxIndexes({start: index, end: index});
+    dispatch(
+      homeActions.updateSelectBoxes({ startIndex: index, endIndex: index })
+    );
   };
 
   const handleMouseEnter = (index: number) => {
     if (isMouseDown) {
-        setSelectedBoxIndexes((prev)=>{
-          return index<prev.start? {start: index, end: prev.end}:{start: prev.start, end: index}
-        });
+      dispatch(
+        homeActions.updateSelectBoxes(
+          index < startIndex
+            ? { startIndex: index, endIndex }
+            : { startIndex, endIndex: index }
+        )
+      );
     }
   };
 
@@ -77,18 +58,12 @@ const Boxes = ({
           Your age
         </h3>
         <div className={className} onMouseUp={handleMouseUp}>
-          {boxes.map((_, index) => (
+          {details.map((boxDetails) => (
             <Box
-              key={index}
-              details={{
-                events: serialNumberEvents.get(index + 1) ?? [],
-                isCompleted: index < numberOfUnitsCompleted,
-                serialNumber: index,
-                unit: unit,
-              }}
+              key={boxDetails.index}
+              details={boxDetails}
               onMouseDown={handleMouseDown}
               onMouseEnter={handleMouseEnter}
-              isSelected={index>=selectedBoxIndexes.start && index<=selectedBoxIndexes.end}
             />
           ))}
         </div>
@@ -99,18 +74,4 @@ const Boxes = ({
 
 export default Boxes;
 
-function addEventsToVisualizer(
-  map: Map<number, LifeEvent[]>,
-  events: LifeEvent[],
-  unit: LifeUnit
-) {
-  events.forEach((event) => {
-    const serialNumber = convertLifeEventToUnit(event, unit);
-    const existingEvents = map.get(serialNumber);
-    if (existingEvents !== undefined) {
-      map.set(serialNumber, [...existingEvents, event]);
-    } else {
-      map.set(serialNumber, [event]);
-    }
-  });
-}
+

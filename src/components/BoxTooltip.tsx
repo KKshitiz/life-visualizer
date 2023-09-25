@@ -11,7 +11,7 @@ const BoxTooltip = ({ details, children }: TooltipProps) => {
       {children}
       <div className="hidden w-52 transition-opacity duration-500 group-hover:flex-col group-hover:flex absolute left-3 bottom-5 z-10 mt-2">
         <div className="bg-blue-800 p-2 rounded-t-lg">
-          {details.unit} {details.serialNumber + 1}
+          {details.unit} {details.index + 1}
         </div>
         <div className="bg-gray-800 p-2 rounded-b-lg">
           <ul>

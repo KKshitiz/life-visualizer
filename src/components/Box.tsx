@@ -4,18 +4,17 @@ import BoxTooltip from "./BoxTooltip";
 type BoxProps = {
    onMouseDown: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => void
   onMouseEnter: (index: number) => void
-  isSelected: boolean;
   details: BoxDetails;
 };
 
-const Box = ({ details, isSelected, onMouseDown, onMouseEnter }: BoxProps) => {
+const Box = ({ details,  onMouseDown, onMouseEnter }: BoxProps) => {
   return (
     <BoxTooltip details={details}>
       <div
-        onMouseDown={(e)=>onMouseDown(e, details.serialNumber)}
-        onMouseEnter={()=>onMouseEnter(details.serialNumber)}
-        className={`w-5 h-5 transition rounded-sm hover:cursor-pointer hover:scale-150 hover:bg-blue-500 ${
-          isSelected
+        onMouseDown={(e)=>onMouseDown(e, details.index)}
+        onMouseEnter={()=>onMouseEnter(details.index)}
+        className={`${details.unit==='year'? 'w-5': 'w-2'} aspect-square transition rounded-sm hover:cursor-pointer hover:scale-150 hover:bg-blue-500 ${
+          details.isSelected
             ? "bg-blue-800"
             : details.events.length !== 0
             ? "bg-yellow-100"

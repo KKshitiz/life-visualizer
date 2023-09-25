@@ -2,10 +2,11 @@ import LifeEvent from "./lifeEvent";
 import LifeUnit from "./lifeUnit";
 
 type BoxDetails = {
-  serialNumber: number;
+  index: number;
   unit: LifeUnit;
   isCompleted: boolean;
   events: LifeEvent[];
+  isSelected: boolean;
 };
 
 export default BoxDetails;
