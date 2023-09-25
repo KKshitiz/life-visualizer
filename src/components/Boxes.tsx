@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Events from "../constants/events";
 import LifeEvent from "../types/lifeEvent";
 import LifeUnit from "../types/lifeUnit";
@@ -19,6 +20,11 @@ const Boxes = ({
   unit,
   showFamousDeaths,
 }: BoxesProps) => {
+  const [selectedBoxIndexes, setSelectedBoxIndexes] = useState<{
+    start: number, end: number
+  }>({start: 0, end: 0});
+  const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+
   const boxes = new Array(numberOfBoxes).fill(null);
 
   const className =
@@ -32,10 +38,36 @@ const Boxes = ({
 
   if (showFamousDeaths) {
     addEventsToVisualizer(serialNumberEvents, Events.famousDeaths, unit);
+    console.log('add famous deaths')
   }
-  addEventsToVisualizer(serialNumberEvents, Events.scientificBreakthroughs, unit)
+  addEventsToVisualizer(
+    serialNumberEvents,
+    Events.scientificBreakthroughs,
+    unit
+  );
 
   console.log(serialNumberEvents);
+
+  const handleMouseDown = (
+    e: React.MouseEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    setIsMouseDown(true);
+    setSelectedBoxIndexes({start: index, end: index});
+  };
+
+  const handleMouseEnter = (index: number) => {
+    if (isMouseDown) {
+        setSelectedBoxIndexes((prev)=>{
+          return index<prev.start? {start: index, end: prev.end}:{start: prev.start, end: index}
+        });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsMouseDown(false);
+  };
 
   return (
     <div>
@@ -44,7 +76,7 @@ const Boxes = ({
         <h3 className="rotate-90 origin-top-left whitespace-nowrap text-center w-1">
           Your age
         </h3>
-        <div className={className}>
+        <div className={className} onMouseUp={handleMouseUp}>
           {boxes.map((_, index) => (
             <Box
               key={index}
@@ -54,6 +86,9 @@ const Boxes = ({
                 serialNumber: index,
                 unit: unit,
               }}
+              onMouseDown={handleMouseDown}
+              onMouseEnter={handleMouseEnter}
+              isSelected={index>=selectedBoxIndexes.start && index<=selectedBoxIndexes.end}
             />
           ))}
         </div>
